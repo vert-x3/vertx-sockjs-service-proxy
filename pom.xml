@@ -7,7 +7,7 @@
   <parent>
     <groupId>io.vertx</groupId>
     <artifactId>vertx-ext-parent</artifactId>
-    <version>30</version>
+    <version>34</version>
   </parent>
 
   <version>3.6.0-SNAPSHOT</version>
@@ -90,26 +90,6 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <executions>
-            <execution>
-              <id>default-compile</id>
-              <configuration>
-                <annotationProcessors>
-                  <annotationProcessor>io.vertx.codegen.CodeGenProcessor</annotationProcessor>
-                  <annotationProcessor>io.vertx.docgen.JavaDocGenProcessor</annotationProcessor>
-                  <annotationProcessor>io.vertx.docgen.DocGenProcessor</annotationProcessor>
-                </annotationProcessors>
-                <generatedSourcesDirectory>${project.basedir}/target/generated-for-docs</generatedSourcesDirectory>
-                <compilerArgs>
-                  <arg>-Acodegen.output=${project.basedir}/target/generated-for-docs</arg>
-                  <arg>-Adocgen.source=${asciidoc.dir}/*.adoc</arg>
-                  <arg>-Adocgen.output=${project.build.directory}/asciidoc/$lang</arg>
-                  <arg>-Amaven.groupId=${project.groupId}</arg>
-                  <arg>-Amaven.artifactId=${project.artifactId}</arg>
-                  <arg>-Amaven.version=${project.version}</arg>
-                  <arg>-Avertx.version=${project.version}</arg>
-                </compilerArgs>
-              </configuration>
-            </execution>
             <execution>
               <id>default-testCompile</id>
               <configuration>
