@@ -224,7 +224,6 @@ public class SockjsServiceProxyTSGenerator extends AbstractSockjsServiceProxyGen
         TypeInfo resultType = asyncResultType.getArg(0);
         switch (resultType.getKind()) {
           case API:
-            return "(err: any, result: " + getTSDocType(resultType) + ") => any";
           case STRING:
           case PRIMITIVE:
           case JSON_OBJECT:
