@@ -1,1 +1,4 @@
-= Vert.x SOckJS Service Proxies
+= Vert.x SockJS Service Proxies
+
+image:https://travis-ci.org/vert-x3/vertx-sockjs-service-proxy.svg?branch=master["Build Status",link="https://travis-ci.org/vert-x3/vertx-sockjs-service-proxy"]
+
