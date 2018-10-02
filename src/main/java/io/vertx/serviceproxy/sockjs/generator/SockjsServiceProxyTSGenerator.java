@@ -3,10 +3,8 @@ package io.vertx.serviceproxy.sockjs.generator;
 import io.vertx.codegen.Case;
 import io.vertx.codegen.Helper;
 import io.vertx.codegen.MethodInfo;
-import io.vertx.codegen.ParamInfo;
 import io.vertx.codegen.type.*;
 import io.vertx.codegen.writer.CodeWriter;
-import io.vertx.serviceproxy.generator.model.ProxyMethodInfo;
 import io.vertx.serviceproxy.generator.model.ProxyModel;
 
 import java.io.StringWriter;
@@ -16,14 +14,12 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static io.vertx.codegen.type.ClassKind.*;
-
-public class SockjsServiceProxyTSGenerator extends AbstractSockjsServiceProxyGenerator {
+public class SockjsServiceProxyTSGenerator extends SockjsServiceProxyJSGenerator {
 
   @Override
   public String filename(ProxyModel model) {
     ClassTypeInfo type = model.getType();
-    return "resources/" + type.getModuleName() + "-ts/" + Helper.convertCamelCaseToUnderscores(type.getRaw().getSimpleName()) + "-proxy.ts";
+    return "resources/" + type.getModuleName() + "-js/" + Helper.convertCamelCaseToUnderscores(type.getRaw().getSimpleName()) + "-proxy.d.ts";
   }
 
   @Override
@@ -39,42 +35,26 @@ public class SockjsServiceProxyTSGenerator extends AbstractSockjsServiceProxyGen
     for (ApiTypeInfo referencedType : model.getReferencedTypes()) {
       if (referencedType.isProxyGen()) {
         String refedType = referencedType.getSimpleName();
-        writer.format("import { %s } from '%s-proxy';", refedType, getModuleName(referencedType)).println();
+        writer.format("import { %s } from './%s-proxy';", refedType, getModuleName(referencedType)).println();
       }
     }
     writer.println();
 
-    writer.format("export class %s {", simpleName).println();
-    writer.println();
-
-    writer.indent().println("private closed = false;");
-    writer.println();
-    writer.println("private readonly convCharCollection = coll => {");
-    writer.indent().println("const ret = [];");
-    writer.println("for (let i = 0; i < coll.length; i++) {");
-    writer.indent().println("ret.push(String.fromCharCode(coll[i]));");
-    writer.unindent().println("}");
-    writer.println("return ret;");
-    writer.unindent().println("}");
+    genDoc(model, writer);
+    writer.format("export default class %s {", simpleName).println();
     writer.println();
 
     //The constructor
-    writer.println("constructor (private eb: any, private address: string) {");
     writer.indent();
-    //Apply any supertypes
-    for (TypeInfo superType : model.getSuperTypes()) {
-      writer.format("%s.call(this, eb, address);", superType.getRaw().getSimpleName()).println();
-    }
-    writer.unindent();
-    writer.println("}");
-
+    writer.println("constructor (eb: any, address: string);");
     //Now iterate through each unique method
-
     for (String methodName : model.getMethodMap().keySet()) {
       //Call out to actually generate the method, we only consider non static methods here
       genMethod(model, methodName, false, this::methodFilter, writer);
     }
+
     writer.unindent();
+
     writer.print("}");
     return sw.toString();
   }
@@ -82,7 +62,7 @@ public class SockjsServiceProxyTSGenerator extends AbstractSockjsServiceProxyGen
   /**
    * Generate a TypeScript Method
    */
-  protected void genMethod(ProxyModel model, String methodName, boolean genStatic, Predicate<MethodInfo> methodFilter, CodeWriter writer) {
+  private void genMethod(ProxyModel model, String methodName, boolean genStatic, Predicate<MethodInfo> methodFilter, CodeWriter writer) {
     String simpleName = model.getIfaceSimpleName();
     Map<String, List<MethodInfo>> methodsByName = model.getMethodMap();
     List<MethodInfo> methodList = methodsByName.get(methodName);
@@ -108,68 +88,8 @@ public class SockjsServiceProxyTSGenerator extends AbstractSockjsServiceProxyGen
         } else {
           writer.print("void");
         }
-        writer.println(" {");
-        genMethodAdapter(model, method, writer);
-        writer.unindent().println("}");
+        writer.println(";");
       }
-    }
-  }
-
-  private void genMethodCall(MethodInfo method, CodeWriter writer) {
-    List<ParamInfo> params = method.getParams();
-    int psize = params.size();
-    ParamInfo lastParam = psize > 0 ? params.get(psize - 1) : null;
-    boolean hasResultHandler = lastParam != null && lastParam.getType().getKind() == HANDLER && ((ParameterizedTypeInfo) lastParam.getType()).getArg(0).getKind() == ASYNC_RESULT;
-    if (hasResultHandler) {
-      psize--;
-    }
-    writer.print("this.eb.send(this.address, {");
-    boolean first = true;
-    for (int pcnt = 0; pcnt < psize; pcnt++) {
-      if (first) {
-        first = false;
-      } else {
-        writer.print(", ");
-      }
-      ParamInfo param = params.get(pcnt);
-      String paramTypeName = param.getType().getName();
-      String paramName = param.getName();
-      writer.format("\"%s\": %s", paramName, paramName);
-      if ("java.lang.Character".equals(paramTypeName) || "char".equals(paramTypeName)) {
-        writer.print(".charCodeAt(0)");
-      }
-    }
-    writer.format("}, {\"action\":\"%s\"}", method.getName());
-    if (hasResultHandler) {
-      ParameterizedTypeInfo handlerType = (ParameterizedTypeInfo) lastParam.getType();
-      ParameterizedTypeInfo asyncResultType = (ParameterizedTypeInfo) handlerType.getArg(0);
-      TypeInfo resultType = asyncResultType.getArg(0);
-      writer.format(", function(err, result) { %s(err, result && ", lastParam.getName());
-      ClassKind resultKind = resultType.getKind();
-      if (resultType.getKind() == API) {
-        writer.format("new %s(this.eb, result.headers.proxyaddr)", resultType.getSimpleName());
-      } else if ((resultKind == LIST || resultKind == SET) && "java.lang.Character".equals(((ParameterizedTypeInfo) resultType).getArg(0).getName())) {
-        writer.print("this.convCharCollection(result.body)");
-      } else {
-        writer.print("result.body");
-      }
-      writer.print("); }");
-    }
-    writer.print(")");
-  }
-
-  private void genMethodAdapter(ProxyModel model, MethodInfo m, CodeWriter writer) {
-    ProxyMethodInfo method = (ProxyMethodInfo) m;
-    writer.indent().println("if (closed) {");
-    writer.indent().println("throw new Error('Proxy is closed');");
-    writer.unindent().println("}");
-    genMethodCall(method, writer);
-    writer.println(";");
-    if (method.isProxyClose()) {
-      writer.println("closed = true;");
-    }
-    if (method.isFluent()) {
-      writer.println("return this;");
     }
   }
 
@@ -238,7 +158,7 @@ public class SockjsServiceProxyTSGenerator extends AbstractSockjsServiceProxyGen
   /**
    * Generate the module name of a type
    */
-  protected String getModuleName(ClassTypeInfo type) {
-    return type.getModuleName() + "-ts/" + Case.CAMEL.to(Case.SNAKE, type.getSimpleName());
+  private String getModuleName(ClassTypeInfo type) {
+    return type.getModuleName() + "-js/" + Case.CAMEL.to(Case.SNAKE, type.getSimpleName());
   }
 }

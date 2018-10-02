@@ -224,6 +224,8 @@ public class SockjsServiceProxyJSGenerator extends AbstractSockjsServiceProxyGen
     String simpleName = type.getSimpleName();
     genLicenses(writer);
     writer.println();
+    writer.format("/// <reference path=\"./%s-proxy.d.ts\" />", Helper.convertCamelCaseToUnderscores(type.getRaw().getSimpleName())).println();
+    writer.println();
     writer.format("/** @module %s */", getModuleName(type)).println();
 
     //generate the module loader shim
@@ -356,7 +358,7 @@ public class SockjsServiceProxyJSGenerator extends AbstractSockjsServiceProxyGen
     writer.print(")");
   }
 
-  private void genDoc(ProxyModel model, CodeWriter writer) {
+  void genDoc(ProxyModel model, CodeWriter writer) {
     writer.println("/**");
     if (model.getIfaceComment() != null) {
       writer.println(Helper.removeTags(model.getIfaceComment()));
