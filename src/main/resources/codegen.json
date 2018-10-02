@@ -8,7 +8,7 @@
     },
     {
       "kind": "proxy",
-      "fileName": "'resources/' + type.raw.moduleName + '-ts/' + helper.convertCamelCaseToUnderscores(type.raw.simpleName) + '-proxy.ts'",
+      "fileName": "'resources/' + type.raw.moduleName + '-js/' + helper.convertCamelCaseToUnderscores(type.raw.simpleName) + '-proxy.d.ts'",
       "templateFileName": "vertx-sockjs-service-proxy/template/proxygen.ts.templ"
     }
   ]

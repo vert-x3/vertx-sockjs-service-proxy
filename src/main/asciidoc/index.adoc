@@ -94,3 +94,32 @@ eb.onopen = function () {
  // use the service
 };
 ----
+
+== Type information (TypeScript)
+
+This project will also generate `TypeScript` definition `.d.ts` files for
+the generated proxies. If your IDE supports it (e.g.: Visual Studio code)
+definition files are automatically picked up as they are referenced from
+the generated JS files (see 1st line)
+
+[source,js]
+----
+/// <reference path="./service_a-proxy.d.ts" />
+----
+
+The usage from Typescript will then rely on the JS implementation but use
+the definition files for type safety/checks:
+
+[source,ts]
+----
+import ServiceA from './examples-js/service_a-proxy';
+
+var service_a = new ServiceA(eb, 'address');
+
+service_a.callMethodA((err, res) => {
+  // do something with the response...
+});
+----
+
+Remember that the generated proxies are not `NPM` modules so they should be
+referenced used a relative path (i.e.: a path starting with a `.`).

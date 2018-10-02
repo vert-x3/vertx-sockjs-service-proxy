@@ -63,42 +63,9 @@
 	@if{methodList.size() > 0}
 	@code{method = methodList.get(methodList.size() - 1);}
 	@if{static == method.staticMethod}
-  @if{static}static @end{}@{methodName}(@foreach{param: method.params}@{param.name}: @{genTSType(param.type)}@end{", "}) : @if{method.fluent}@{ifaceSimpleName}@else{}void@end{} {\n
-				@includeNamed{'genMethodAdapter'}
-  }\n\n
+  @if{static}static @end{}@{methodName}(@foreach{param: method.params}@{param.name}: @{genTSType(param.type)}@end{", "}) : @if{method.fluent}@{ifaceSimpleName}@else{}void@end{}\n\n
 	@end{}
 	@end{}
-@end{}
-
-@declare{'genMethodCall'}
-	@code{params = method.params}
-	@code{psize = params.size()}
-	@code{lastParam = psize > 0 ? params[psize - 1] : null}
-	@code{hasResultHandler = (lastParam != null) && (lastParam.type.kind == CLASS_HANDLER) && (lastParam.type.args[0].kind == CLASS_ASYNC_RESULT)}
-	@if{hasResultHandler}
-		@code{(psize--)}
-	@end{}
-	    this.eb.send(this.address, {
-	@foreach{pcnt : psize}
-		@code{param=method.params[pcnt]}
-		"@{param.name}": @{param.name}
-		@if{param.type.name == 'java.lang.Character' || param.type.name == 'char'}
-		.charCodeAt(0)
-		@end{}
-	@end{", "}
-	}, {"action":"@{method.name}"}
-	@if{hasResultHandler}
-		, function(err, result) { @{lastParam.name}(err, result &&
-		@code{resultType=lastParam.type.args[0].args[0]}
-		@if{resultType.kind==CLASS_API}
-		new @{resultType.simpleName}(this.eb, result.headers.proxyaddr)
-		@else{(resultType.kind==CLASS_LIST || resultType.kind==CLASS_SET) && resultType.args[0].name=='java.lang.Character'}
-		this.convCharCollection(result.body)
-		@else{}
-		result.body
-		@end{}
-		); }
-	@end{})
 @end{}
 
 @declare{'genMethodAdapter'}
@@ -118,7 +85,7 @@
 @comment{"==================================="}
 
 /*\n
- * Copyright 2014 Red Hat, Inc.\n
+ * Copyright 2018 Red Hat, Inc.\n
  *\n
  * Red Hat licenses this file to you under the Apache License, version 2.0\n
  * (the "License"); you may not use this file except in compliance with the\n
@@ -140,31 +107,16 @@
 @foreach{referencedType : referencedTypes}
 	@if{referencedType.proxyGen}
 		@code{refedType=referencedType.simpleName;}
-import { @{refedType} } from '@{genModuleName(referencedType)}-proxy';\n
+import { @{refedType} } from './@{genModuleName(referencedType)}-proxy';\n
 	@end{}
 @end{}
 \n
 
-export class @{ifaceSimpleName} {\n\n
-
-  private closed = false;\n\n
-
-  private readonly convCharCollection = coll => {\n
-    const ret = [];\n
-    for (let i = 0; i < coll.length; i++) {\n
-      ret.push(String.fromCharCode(coll[i]));\n
-    }\n
-    return ret;\n
-  }\n\n
+export default class @{ifaceSimpleName} {\n\n
 
 @comment{"The constructor"}
 
-  constructor (private eb: any, private address: string) {\n
-@comment{"Apply any supertypes"}
-@foreach{superType: superTypes}
-  @{superType.raw.simpleName}.call(this, j_val);\n
-@end{}
-  }\n\n
+  constructor (eb: any, address: string);\n\n
 
 @code{
   def methodFilter(method) {

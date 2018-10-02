@@ -58,9 +58,10 @@
 
 @comment{"This is where the generation starts"}
 @comment{"==================================="}
+/// <reference path="./@{helper.convertCamelCaseToUnderscores(type.raw.simpleName)}-proxy.d.ts" />\n\n
 
 /*\n
- * Copyright 2014 Red Hat, Inc.\n
+ * Copyright 2018 Red Hat, Inc.\n
  *\n
  * Red Hat licenses this file to you under the Apache License, version 2.0\n
  * (the "License"); you may not use this file except in compliance with the\n
@@ -152,20 +153,13 @@
   };\n
 \n
 
-@comment{"Iterate through the methods again, this time only considering the static ones"}
-
-@foreach{methodName:methodsByName.keySet()}
-
-@comment{"Call out to generate the static method"}
-@includeNamed{'genMethod';static=true;ind="  "}
-
-@end{}
-
   if (typeof exports !== 'undefined') {\n
     if (typeof module !== 'undefined' && module.exports) {\n
       exports = module.exports = @{ifaceSimpleName};\n
+//      exports['default'] = module.exports['default'] = @{ifaceSimpleName};\n
     } else {\n
       exports.@{ifaceSimpleName} = @{ifaceSimpleName};\n
+//      exports['default'] = @{ifaceSimpleName};\n
     }\n
   } else {\n
     return @{ifaceSimpleName};\n
