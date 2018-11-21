@@ -2,6 +2,8 @@ package io.vertx.serviceproxy.sockjs.generator;
 
 import io.vertx.codegen.Generator;
 import io.vertx.codegen.MethodInfo;
+import io.vertx.codegen.annotations.ModuleGen;
+import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.codegen.doc.Tag;
 import io.vertx.codegen.type.ClassTypeInfo;
 import io.vertx.codegen.type.EnumTypeInfo;
@@ -13,6 +15,9 @@ import io.vertx.serviceproxy.generator.model.ProxyModel;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import java.io.PrintWriter;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 
 import static io.vertx.codegen.type.ClassKind.DATA_OBJECT;
@@ -25,6 +30,11 @@ abstract class AbstractSockjsServiceProxyGenerator extends Generator<ProxyModel>
   AbstractSockjsServiceProxyGenerator() {
     this.name = "sockjs_service_proxies";
     this.kinds = Collections.singleton("proxy");
+  }
+
+  @Override
+  public Collection<Class<? extends Annotation>> annotations() {
+    return Arrays.asList(VertxGen.class, ModuleGen.class);
   }
 
   boolean methodFilter(MethodInfo m){
