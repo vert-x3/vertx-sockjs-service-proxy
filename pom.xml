@@ -58,7 +58,6 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-web</artifactId>
       <classifier>client</classifier>
-      <version>${project.version}</version>
       <scope>test</scope>
       <type>js</type>
     </dependency>
