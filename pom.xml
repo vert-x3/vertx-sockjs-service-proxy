@@ -8,12 +8,12 @@
     <version>34</version>
   </parent>
 
-  <version>3.7.0</version>
+  <version>3.7.1-SNAPSHOT</version>
   <artifactId>vertx-sockjs-service-proxy</artifactId>
 
   <properties>
     <codegen.rxjava.deprecated>true</codegen.rxjava.deprecated>
-    <stack.version>3.7.0</stack.version>
+    <stack.version>3.7.1-SNAPSHOT</stack.version>
   </properties>
 
   <dependencyManagement>
