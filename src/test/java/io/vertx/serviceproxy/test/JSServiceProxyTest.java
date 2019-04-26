@@ -4,9 +4,12 @@ import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.Addresses;
 import io.vertx.serviceproxy.ProxyHelper;
+import io.vertx.serviceproxy.ServiceBinder;
 import io.vertx.serviceproxy.testmodel.TestService;
 import io.vertx.test.core.VertxTestBase;
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author <a href="mailto:julien@julienviet.com">Julien Viet</a>
@@ -20,7 +23,7 @@ public class JSServiceProxyTest extends VertxTestBase {
   public void setUp() throws Exception {
     super.setUp();
     service = TestService.create(vertx);
-    consumer = ProxyHelper.registerService(TestService.class, vertx, service, Addresses.SERVICE_ADDRESS);
+    consumer = new ServiceBinder(vertx).setAddress(Addresses.SERVICE_ADDRESS).register(TestService.class, service);
     vertx.eventBus().<String>consumer(Addresses.TEST_ADDRESS).handler(msg -> {
       assertEquals("ok", msg.body());
       testComplete();
@@ -418,7 +421,7 @@ public class JSServiceProxyTest extends VertxTestBase {
   public void testConnectionTimeout() {
     consumer.unregister();
     long timeoutSeconds = 2;
-    consumer = ProxyHelper.registerService(TestService.class, vertx, service, Addresses.SERVICE_ADDRESS, timeoutSeconds);
+    consumer = new ServiceBinder(vertx).setAddress(Addresses.SERVICE_ADDRESS).setTimeoutSeconds(timeoutSeconds).register(TestService.class, service);
     deploy("test_service_connectionTimeout.js");
     await();
   }
@@ -427,7 +430,7 @@ public class JSServiceProxyTest extends VertxTestBase {
   public void testConnectionWithCloseFutureTimeout() {
     consumer.unregister();
     long timeoutSeconds = 2;
-    consumer = ProxyHelper.registerService(TestService.class, vertx, service, Addresses.SERVICE_ADDRESS, timeoutSeconds);
+    consumer = new ServiceBinder(vertx).setAddress(Addresses.SERVICE_ADDRESS).setTimeoutSeconds(timeoutSeconds).register(TestService.class, service);
     deploy("test_service_connectionWithCloseFutureTimeout.js");
     await();
   }
