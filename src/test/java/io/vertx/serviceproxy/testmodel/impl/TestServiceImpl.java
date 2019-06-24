@@ -523,6 +523,6 @@ public class TestServiceImpl implements TestService {
 
   @Override
   public void longDeliveryFailed(Handler<AsyncResult<String>> resultHandler) {
-    vertx.setTimer(30*1000L, tid -> resultHandler.handle(Future.succeededFuture("blah")));
+    vertx.setTimer(30*1000L, tid -> resultHandler.handle(Future.failedFuture("blah")));
   }
 }
