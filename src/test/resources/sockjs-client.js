@@ -85,9 +85,9 @@ SockJS.prototype.send = function(string) {
     switch (json.type) {
       case 'send':
         if (headers) {
-          eb.send(address, message, headers, handler)
+          eb.request(address, message, headers, handler)
         } else {
-          eb.send(address, message, handler)
+          eb.request(address, message, handler)
         }
         break;
       case 'publish':
