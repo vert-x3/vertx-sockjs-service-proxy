@@ -27,8 +27,7 @@ public class Examples {
             .setAddress("database-service-address"));
 
     // Create the event bus bridge and add it to the router.
-    SockJSHandler ebHandler = SockJSHandler.create(vertx).bridge(opts);
-    router.route("/eventbus/*").handler(ebHandler);
+    router.mountSubRouter("/eventbus", SockJSHandler.create(vertx).bridge(opts));
 
     vertx.createHttpServer().requestHandler(router::accept).listen(8080);
   }
