@@ -1,9 +1,9 @@
 package examples;
 
 import io.vertx.core.Vertx;
+import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
-import io.vertx.ext.web.handler.sockjs.PermittedOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import io.vertx.serviceproxy.ProxyHelper;
 
@@ -29,6 +29,6 @@ public class Examples {
     // Create the event bus bridge and add it to the router.
     router.mountSubRouter("/eventbus", SockJSHandler.create(vertx).bridge(opts));
 
-    vertx.createHttpServer().requestHandler(router::accept).listen(8080);
+    vertx.createHttpServer().requestHandler(router).listen(8080);
   }
 }
