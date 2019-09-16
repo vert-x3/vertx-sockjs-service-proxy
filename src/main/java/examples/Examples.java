@@ -5,7 +5,6 @@ import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
-import io.vertx.serviceproxy.ProxyHelper;
 import io.vertx.serviceproxy.ServiceBinder;
 
 /**
@@ -19,7 +18,7 @@ public class Examples {
       .setAddress("database-service-address")
       .register(SomeDatabaseService.class, service);
 
-
+    Router router = Router.router(vertx);
     // Allow events for the designated addresses in/out of the event bus bridge
     BridgeOptions opts = new BridgeOptions()
         .addInboundPermitted(new PermittedOptions()
@@ -28,7 +27,7 @@ public class Examples {
             .setAddress("database-service-address"));
 
     // Create the event bus bridge and add it to the router.
-    Router router = SockJSHandler.create(vertx).bridge(opts);
+    router.mountSubRouter("/eventbus", SockJSHandler.create(vertx).bridge(opts));
 
     vertx.createHttpServer().requestHandler(router).listen(8080);
   }
