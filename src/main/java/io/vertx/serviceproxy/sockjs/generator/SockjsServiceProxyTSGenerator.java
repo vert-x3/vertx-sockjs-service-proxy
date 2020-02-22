@@ -97,61 +97,66 @@ public class SockjsServiceProxyTSGenerator extends SockjsServiceProxyJSGenerator
    * Generate the JSDoc type of a type
    */
   private String getTSDocType(TypeInfo type) {
-    switch (type.getKind()) {
-      case STRING:
-        return "string" + (type.isNullable() ? " | null" : "");
-      case PRIMITIVE:
-      case BOXED_PRIMITIVE:
-        switch (type.getSimpleName()) {
-          case "boolean":
-          case "Boolean":
-            return "boolean" + (type.isNullable() ? " | null" : "");
-          case "char":
-          case "Character":
-            return "string" + (type.isNullable() ? " | null" : "");
-          default:
-            return "number" + (type.isNullable() ? " | null" : "");
-        }
-      case JSON_OBJECT:
-        return "Object" + (type.isNullable() ? " | null" : "");
-      case JSON_ARRAY:
-        return "Array" + (type.isNullable() ? " | null" : "");
-      case DATA_OBJECT:
-        return "any" + (type.isNullable() ? " | null" : "");
-      case ENUM:
-        return "string" + (type.isNullable() ? " | null" : "");
-      case API:
-        return type.getRaw().getSimpleName() + (type.isNullable() ? " | null" : "");
-      case MAP:
-        //`Map` before `collection`, because of MAP.collection is true
-        return "Object<string, " + getTSDocType(((ParameterizedTypeInfo) type).getArg(1)) + ">" + (type.isNullable() ? " | null" : "");
-      case SET:
-      case LIST:
-        return "Array<" + getTSDocType(((ParameterizedTypeInfo) type).getArg(0)) + ">" + (type.isNullable() ? " | null" : "");
-      case OBJECT:
-        return "any";
-      case HANDLER:
-        ParameterizedTypeInfo handlerType = (ParameterizedTypeInfo) type;
-        ParameterizedTypeInfo asyncResultType = (ParameterizedTypeInfo) handlerType.getArg(0);
-        TypeInfo resultType = asyncResultType.getArg(0);
-        switch (resultType.getKind()) {
-          case API:
-          case STRING:
-          case PRIMITIVE:
-          case JSON_OBJECT:
-          case JSON_ARRAY:
-          case DATA_OBJECT:
-          case ENUM:
-          case MAP:
-          case SET:
-          case LIST:
-          case OBJECT:
+    if (type.isDataObjectHolder()) {
+      return "any" + (type.isNullable() ? " | null" : "");
+    } else {
+      switch (type.getKind()) {
+        case STRING:
+          return "string" + (type.isNullable() ? " | null" : "");
+        case PRIMITIVE:
+        case BOXED_PRIMITIVE:
+          switch (type.getSimpleName()) {
+            case "boolean":
+            case "Boolean":
+              return "boolean" + (type.isNullable() ? " | null" : "");
+            case "char":
+            case "Character":
+              return "string" + (type.isNullable() ? " | null" : "");
+            default:
+              return "number" + (type.isNullable() ? " | null" : "");
+          }
+        case JSON_OBJECT:
+          return "Object" + (type.isNullable() ? " | null" : "");
+        case JSON_ARRAY:
+          return "Array" + (type.isNullable() ? " | null" : "");
+        case ENUM:
+          return "string" + (type.isNullable() ? " | null" : "");
+        case API:
+          return type.getRaw().getSimpleName() + (type.isNullable() ? " | null" : "");
+        case MAP:
+          //`Map` before `collection`, because of MAP.collection is true
+          return "Object<string, " + getTSDocType(((ParameterizedTypeInfo) type).getArg(1)) + ">" + (type.isNullable() ? " | null" : "");
+        case SET:
+        case LIST:
+          return "Array<" + getTSDocType(((ParameterizedTypeInfo) type).getArg(0)) + ">" + (type.isNullable() ? " | null" : "");
+        case OBJECT:
+          return "any";
+        case HANDLER:
+          ParameterizedTypeInfo handlerType = (ParameterizedTypeInfo) type;
+          ParameterizedTypeInfo asyncResultType = (ParameterizedTypeInfo) handlerType.getArg(0);
+          TypeInfo resultType = asyncResultType.getArg(0);
+          if (resultType.isDataObjectHolder()) {
             return "(err: any, result: " + getTSDocType(resultType) + ") => any";
-          default:
-            return "(err: any, result: any) => any";
-        }
-      default:
-        return "todo";
+          } else {
+            switch (resultType.getKind()) {
+              case API:
+              case STRING:
+              case PRIMITIVE:
+              case JSON_OBJECT:
+              case JSON_ARRAY:
+              case ENUM:
+              case MAP:
+              case SET:
+              case LIST:
+              case OBJECT:
+                return "(err: any, result: " + getTSDocType(resultType) + ") => any";
+              default:
+                return "(err: any, result: any) => any";
+            }
+          }
+        default:
+          return "todo";
+      }
     }
   }
 

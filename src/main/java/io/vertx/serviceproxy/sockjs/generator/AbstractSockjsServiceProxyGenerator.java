@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import static io.vertx.codegen.type.ClassKind.DATA_OBJECT;
 import static io.vertx.codegen.type.ClassKind.ENUM;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.ElementKind.INTERFACE;
@@ -68,12 +67,13 @@ abstract class AbstractSockjsServiceProxyGenerator extends Generator<ProxyModel>
     ClassTypeInfo rawType = link.getTargetType().getRaw();
     if (rawType.getModule() != null) {
       String label = link.getLabel().trim();
-      if (rawType.getKind() == DATA_OBJECT) {
+      /*if (rawType.getKind() == DATA_OBJECT) {
         if (label.length() == 0) {
           label = rawType.getSimpleName();
         }
         return "<a href=\"../../dataobjects.html#" + rawType.getSimpleName() + "\">" + label + "</a>";
-      } else if (rawType.getKind() == ENUM && ((EnumTypeInfo) rawType).isGen()) {
+      } else */
+      if (rawType.getKind() == ENUM && ((EnumTypeInfo) rawType).isGen()) {
         if (label.length() == 0) {
           label = rawType.getSimpleName();
         }
@@ -101,41 +101,44 @@ abstract class AbstractSockjsServiceProxyGenerator extends Generator<ProxyModel>
    * Generate the JSDoc type of a type
    */
   protected String getJSDocType(TypeInfo type) {
-    switch (type.getKind()) {
-      case STRING:
-        return "string";
-      case PRIMITIVE:
-      case BOXED_PRIMITIVE:
-        switch (type.getSimpleName()) {
-          case "boolean":
-          case "Boolean":
-            return "boolean";
-          case "char":
-          case "Character":
-            return "string";
-          default:
-            return "number";
-        }
-      case JSON_OBJECT:
-      case DATA_OBJECT:
-      case ENUM:
-      case OBJECT:
-        return "Object";
-      case JSON_ARRAY:
-        return "Array";
-      case API:
-        return type.getRaw().getSimpleName();
-      case MAP:
-        //`Map` before `collection`, because of MAP.collection is true
-        return "Object.<string, " + getJSDocType(((ParameterizedTypeInfo) type).getArg(1)) + ">";
-      case HANDLER:
-      case FUNCTION:
-        return "function";
-      case SET:
-      case LIST:
-        return "Array.<" + getJSDocType(((ParameterizedTypeInfo) type).getArg(0)) + ">";
-      default:
-        return "todo";
+    if (type.isDataObjectHolder()) {
+      return "Object";
+    } else {
+      switch (type.getKind()) {
+        case STRING:
+          return "string";
+        case PRIMITIVE:
+        case BOXED_PRIMITIVE:
+          switch (type.getSimpleName()) {
+            case "boolean":
+            case "Boolean":
+              return "boolean";
+            case "char":
+            case "Character":
+              return "string";
+            default:
+              return "number";
+          }
+        case JSON_OBJECT:
+        case ENUM:
+        case OBJECT:
+          return "Object";
+        case JSON_ARRAY:
+          return "Array";
+        case API:
+          return type.getRaw().getSimpleName();
+        case MAP:
+          //`Map` before `collection`, because of MAP.collection is true
+          return "Object.<string, " + getJSDocType(((ParameterizedTypeInfo) type).getArg(1)) + ">";
+        case HANDLER:
+        case FUNCTION:
+          return "function";
+        case SET:
+        case LIST:
+          return "Array.<" + getJSDocType(((ParameterizedTypeInfo) type).getArg(0)) + ">";
+        default:
+          return "todo";
+      }
     }
   }
 }
