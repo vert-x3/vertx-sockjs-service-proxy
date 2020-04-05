@@ -3,7 +3,7 @@ package examples;
 import io.vertx.core.Vertx;
 import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.ext.web.Router;
-import io.vertx.ext.web.handler.sockjs.BridgeOptions;
+import io.vertx.ext.web.handler.sockjs.SockJSBridgeOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import io.vertx.serviceproxy.ServiceBinder;
 
@@ -20,7 +20,7 @@ public class Examples {
 
     Router router = Router.router(vertx);
     // Allow events for the designated addresses in/out of the event bus bridge
-    BridgeOptions opts = new BridgeOptions()
+    SockJSBridgeOptions opts = new SockJSBridgeOptions()
         .addInboundPermitted(new PermittedOptions()
             .setAddress("database-service-address"))
         .addOutboundPermitted(new PermittedOptions()
