@@ -51,11 +51,6 @@
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
-      <artifactId>vertx-lang-js</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
       <artifactId>vertx-web</artifactId>
       <classifier>client</classifier>
       <scope>test</scope>
@@ -100,6 +95,12 @@
               </configuration>
             </execution>
           </executions>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
         </plugin>
       </plugins>
 
