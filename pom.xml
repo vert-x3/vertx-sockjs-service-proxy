@@ -14,6 +14,8 @@
   <properties>
     <codegen.rxjava.deprecated>true</codegen.rxjava.deprecated>
     <stack.version>4.0.0-SNAPSHOT</stack.version>
+    <es4x.version>0.11.1-SNAPSHOT</es4x.version>
+    <graalvm.version>20.0.0</graalvm.version>
   </properties>
 
   <dependencyManagement>
@@ -52,13 +54,6 @@
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-web</artifactId>
-      <classifier>client</classifier>
-      <scope>test</scope>
-      <type>js</type>
-    </dependency>
-    <dependency>
-      <groupId>io.vertx</groupId>
-      <artifactId>vertx-web</artifactId>
     </dependency>
 
     <!-- Testing -->
@@ -74,7 +69,58 @@
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-web</artifactId>
+      <classifier>client</classifier>
+      <scope>test</scope>
+      <type>js</type>
+    </dependency>
+    <dependency>
+      <groupId>io.reactiverse</groupId>
+      <artifactId>es4x</artifactId>
+      <version>${es4x.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>graaljs</id>
+      <activation>
+        <file>
+          <missing>${java.home}/../GRAALVM-README.md</missing>
+        </file>
+      </activation>
+      <dependencies>
+        <!-- GraalVM runtime -->
+        <dependency>
+          <groupId>org.graalvm.truffle</groupId>
+          <artifactId>truffle-api</artifactId>
+          <version>${graalvm.version}</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.graalvm.js</groupId>
+          <artifactId>js</artifactId>
+          <version>${graalvm.version}</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.graalvm.tools</groupId>
+          <artifactId>profiler</artifactId>
+          <version>${graalvm.version}</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.graalvm.tools</groupId>
+          <artifactId>chromeinspector</artifactId>
+          <version>${graalvm.version}</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 
   <build>
     <pluginManagement>
@@ -95,12 +141,6 @@
               </configuration>
             </execution>
           </executions>
-        </plugin>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <configuration>
-            <skip>true</skip>
-          </configuration>
         </plugin>
       </plugins>
 

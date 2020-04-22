@@ -246,7 +246,7 @@ public class SockjsServiceProxyJSGenerator extends AbstractSockjsServiceProxyGen
     for (ApiTypeInfo referencedType : model.getReferencedTypes()) {
       if(referencedType.isProxyGen()) {
         String refedType = referencedType.getSimpleName();
-        writer.format("var %s = require('%s-proxy');", refedType, getModuleName(referencedType)).println();
+        writer.format("var %s = require('./%s-proxy');", refedType, getModuleName(referencedType)).println();
       }
     }
     writer.println();
