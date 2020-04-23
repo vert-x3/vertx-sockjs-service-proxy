@@ -228,27 +228,52 @@ public class SockjsServiceProxyJSGenerator extends AbstractSockjsServiceProxyGen
     writer.println();
     writer.format("/** @module %s */", getModuleName(type)).println();
 
+    List<String> imports = new ArrayList<>();
+
     //generate the module loader shim
     writer.println("!function (factory) {");
     writer.indent().println("if (typeof require === 'function' && typeof module !== 'undefined') {");
-    writer.indent().println("factory();");
-    writer.unindent().println("} else if (typeof define === 'function' && define.amd) {");
-    writer.indent().println("// AMD loader");
-    writer.format("define('%s-proxy', [], factory);", getModuleName(type));
-    writer.println();
-    writer.unindent().println("} else {");
-    writer.indent().println("// plain old include");
-    writer.format("%s = factory();", simpleName).println();
-    writer.unindent().println("}");
-    writer.unindent().println("}(function () {");
+    // write imports as commonJS
     writer.indent();
-    //Generate the requires
+    imports.clear();
     for (ApiTypeInfo referencedType : model.getReferencedTypes()) {
       if(referencedType.isProxyGen()) {
         String refedType = referencedType.getSimpleName();
+        imports.add(refedType);
         writer.format("var %s = require('./%s-proxy');", refedType, getModuleName(referencedType)).println();
       }
     }
+    writer.format("factory(%s);", String.join(", ", imports)).println();
+    writer.unindent().println("} else if (typeof define === 'function' && define.amd) {");
+    writer.indent().println("// AMD loader");
+    imports.clear();
+    for (ApiTypeInfo referencedType : model.getReferencedTypes()) {
+      if(referencedType.isProxyGen()) {
+        imports.add("'" + getModuleName(referencedType) + "-proxy'");
+      }
+    }
+    writer.format("define('%s-proxy', [%s], factory);", getModuleName(type), String.join(", ", imports));
+    writer.println();
+    writer.unindent().println("} else {");
+    writer.indent().println("// plain old include");
+    imports.clear();
+    for (ApiTypeInfo referencedType : model.getReferencedTypes()) {
+      if(referencedType.isProxyGen()) {
+        String refedType = referencedType.getSimpleName();
+        imports.add("this." + refedType);
+      }
+    }
+    writer.format("%s = factory(%s);", simpleName, String.join(", ", imports)).println();
+    writer.unindent().println("}");
+    imports.clear();
+    for (ApiTypeInfo referencedType : model.getReferencedTypes()) {
+      if(referencedType.isProxyGen()) {
+        String refedType = referencedType.getSimpleName();
+        imports.add(refedType);
+      }
+    }
+    writer.unindent().format("}(function (%s) {", String.join(", ", imports)).println();
+    writer.indent();
     writer.println();
     genDoc(model, writer);
     //The constructor

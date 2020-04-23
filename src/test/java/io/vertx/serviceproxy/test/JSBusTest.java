@@ -2,14 +2,42 @@ package io.vertx.serviceproxy.test;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.test.core.VertxTestBase;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Source;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author <a href="mailto:julien@julienviet.com">Julien Viet</a>
  */
 public class JSBusTest extends VertxTestBase {
+
+  private static void eval(Context context, String filename) {
+    try {
+      context.eval(
+        Source.newBuilder(
+          "js",
+          new InputStreamReader(JSBusTest.class.getResourceAsStream(filename)), filename).build());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private void execute(String script) {
+    try (Context context = Context.newBuilder("js").allowAllAccess(true).build()) {
+      context.getBindings("js").putMember("vertx", vertx);
+      // load sockjs mock
+      eval(context, "/node_modules/sockjs-client.js");
+      // load sockjs client
+      eval(context, "/vertx-js/vertx-web-client.js");
+      // load the test
+      vertx.runOnContext(v -> eval(context, script));
+      await();
+    }
+  }
 
   @Test
   public void testBusReconnect() {
@@ -18,8 +46,7 @@ public class JSBusTest extends VertxTestBase {
       assertEquals(0, msg.headers().size());
       testComplete();
     });
-    vertx.deployVerticle("bus_test_reconnect.js", ar -> assertTrue(ar.succeeded()));
-    await();
+    execute("/bus_test_reconnect.js");
   }
 
   @Test
@@ -29,8 +56,7 @@ public class JSBusTest extends VertxTestBase {
       assertEquals(0, msg.headers().size());
       testComplete();
     });
-    vertx.deployVerticle("bus_test_send_1.js", ar -> assertTrue(ar.succeeded()));
-    await();
+    execute("/bus_test_send_1.js");
   }
 
   @Test
@@ -41,8 +67,7 @@ public class JSBusTest extends VertxTestBase {
       assertEquals("the_header_value", msg.headers().get("the_header_name"));
       testComplete();
     });
-    vertx.deployVerticle("bus_test_send_2.js", ar -> assertTrue(ar.succeeded()));
-    await();
+    execute("/bus_test_send_2.js");
   }
 
   @Test
@@ -53,8 +78,7 @@ public class JSBusTest extends VertxTestBase {
       msg.reply("whatever");
     });
     vertx.eventBus().consumer("done", msg -> testComplete());
-    vertx.deployVerticle("bus_test_send_3.js", ar -> assertTrue(ar.succeeded()));
-    await();
+    execute("/bus_test_send_3.js");
   }
 
   @Test
@@ -74,8 +98,7 @@ public class JSBusTest extends VertxTestBase {
       assertEquals(2, count.get());
       testComplete();
     });
-    vertx.deployVerticle("bus_test_send_4.js", ar -> assertTrue(ar.succeeded()));
-    await();
+    execute("/bus_test_send_4.js");
   }
 
   @Test
@@ -87,8 +110,7 @@ public class JSBusTest extends VertxTestBase {
       msg.reply("whatever");
     });
     vertx.eventBus().consumer("done", msg -> testComplete());
-    vertx.deployVerticle("bus_test_send_5.js", ar -> assertTrue(ar.succeeded()));
-    await();
+    execute("/bus_test_send_5.js");
   }
 
   @Test
@@ -112,7 +134,6 @@ public class JSBusTest extends VertxTestBase {
       assertEquals(2, count.get());
       testComplete();
     });
-    vertx.deployVerticle("bus_test_send_6.js", ar -> assertTrue(ar.succeeded()));
-    await();
+    execute("/bus_test_send_6.js");
   }
 }

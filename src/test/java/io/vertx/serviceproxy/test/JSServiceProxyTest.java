@@ -6,7 +6,12 @@ import io.vertx.serviceproxy.Addresses;
 import io.vertx.serviceproxy.ProxyHelper;
 import io.vertx.serviceproxy.testmodel.TestService;
 import io.vertx.test.core.VertxTestBase;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Source;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * @author <a href="mailto:julien@julienviet.com">Julien Viet</a>
@@ -27,13 +32,34 @@ public class JSServiceProxyTest extends VertxTestBase {
     });
   }
 
-  private void deploy(String test) {
-    vertx.deployVerticle(test, ar -> {
-      if (ar.failed()) {
-        ar.cause().printStackTrace();
-      }
-      assertTrue(ar.succeeded());
-    });
+  private static void eval(Context context, String filename) {
+    try {
+      context.eval(
+        Source.newBuilder(
+          "js",
+          new InputStreamReader(JSBusTest.class.getResourceAsStream(filename)), filename).build());
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private void execute(String script) {
+    try (Context context = Context.newBuilder("js").allowAllAccess(true).build()) {
+      context.getBindings("js").putMember("vertx", vertx);
+      // load sockjs mock
+      eval(context, "/node_modules/sockjs-client.js");
+      // load sockjs client
+      eval(context, "/vertx-js/vertx-web-client.js");
+      // load the service dependencies
+      eval(context, "/test-js/test_connection-proxy.js");
+      eval(context, "/test-js/test_connection_with_close_future-proxy.js");
+      // load the service
+      eval(context, "/test-js/test_service-proxy.js");
+
+      // load the test
+      vertx.runOnContext(v -> eval(context, script));
+      await();
+    }
   }
 
   @Override
@@ -44,374 +70,313 @@ public class JSServiceProxyTest extends VertxTestBase {
 
   @Test
   public void testInvalidParams() {
-    deploy("test_service_invalidParams.js");
-    await();
+    execute("/test_service_invalidParams.js");
   }
 
   @Test
   public void testNoParams() {
-    deploy("test_service_noParams.js");
-    await();
+    execute("/test_service_noParams.js");
   }
 
   @Test
   public void testBasicTypes() {
-    deploy("test_service_basicTypes.js");
-    await();
+    execute("/test_service_basicTypes.js");
   }
 
   @Test
   public void testBasicBoxedTypes() {
-    deploy("test_service_basicBoxedTypes.js");
-    await();
+    execute("/test_service_basicBoxedTypes.js");
   }
 
   @Test
   public void testJsonTypes() {
-    deploy("test_service_jsonTypes.js");
-    await();
+    execute("/test_service_jsonTypes.js");
   }
 
   @Test
   public void testEnumType() {
-    deploy("test_service_enumType.js");
-    await();
+    execute("/test_service_enumType.js");
   }
 
   @Test
   public void testDataObjectType() {
-    deploy("test_service_dataObjectType.js");
-    await();
+    execute("/test_service_dataObjectType.js");
   }
 
   @Test
   public void testListTypes() {
-    deploy("test_service_listTypes.js");
-    await();
+    execute("/test_service_listTypes.js");
   }
 
   @Test
   public void testSetTypes() {
-    deploy("test_service_setTypes.js");
-    await();
+    execute("/test_service_setTypes.js");
   }
 
   @Test
   public void testMapTypes() {
-    deploy("test_service_mapTypes.js");
-    await();
+    execute("/test_service_mapTypes.js");
   }
 
   @Test
   public void testStringHandler() {
-    deploy("test_service_stringHandler.js");
-    await();
+    execute("/test_service_stringHandler.js");
   }
 
   @Test
   public void testStringNullHandler() {
-    deploy("test_service_stringNullHandler.js");
-    await();
+    execute("/test_service_stringNullHandler.js");
   }
 
   @Test
   public void testByteHandler() {
-    deploy("test_service_byteHandler.js");
-    await();
+    execute("/test_service_byteHandler.js");
   }
 
   @Test
   public void testByteNullHandler() {
-    deploy("test_service_byteNullHandler.js");
-    await();
+    execute("/test_service_byteNullHandler.js");
   }
 
   @Test
   public void testShortHandler() {
-    deploy("test_service_shortHandler.js");
-    await();
+    execute("/test_service_shortHandler.js");
   }
 
   @Test
   public void testShortNullHandler() {
-    deploy("test_service_shortNullHandler.js");
-    await();
+    execute("/test_service_shortNullHandler.js");
   }
 
   @Test
   public void testIntHandler() {
-    deploy("test_service_intHandler.js");
-    await();
+    execute("/test_service_intHandler.js");
   }
 
   @Test
   public void testIntNullHandler() {
-    deploy("test_service_intNullHandler.js");
-    await();
+    execute("/test_service_intNullHandler.js");
   }
 
   @Test
   public void testLongHandler() {
-    deploy("test_service_longHandler.js");
-    await();
+    execute("/test_service_longHandler.js");
   }
 
   @Test
   public void testLongNullHandler() {
-    deploy("test_service_longNullHandler.js");
-    await();
+    execute("/test_service_longNullHandler.js");
   }
 
   @Test
   public void testFloatHandler() {
-    deploy("test_service_floatHandler.js");
-    await();
+    execute("/test_service_floatHandler.js");
   }
 
   @Test
   public void testFloatNullHandler() {
-    deploy("test_service_floatNullHandler.js");
-    await();
+    execute("/test_service_floatNullHandler.js");
   }
 
   @Test
   public void testDoubleHandler() {
-    deploy("test_service_doubleHandler.js");
-    await();
+    execute("/test_service_doubleHandler.js");
   }
 
   @Test
   public void testDoubleNullHandler() {
-    deploy("test_service_doubleNullHandler.js");
-    await();
+    execute("/test_service_doubleNullHandler.js");
   }
 
   @Test
   public void testCharHandler() {
-    deploy("test_service_charHandler.js");
-    await();
+    execute("/test_service_charHandler.js");
   }
 
   @Test
   public void testCharNullHandler() {
-    deploy("test_service_charNullHandler.js");
-    await();
+    execute("/test_service_charNullHandler.js");
   }
 
   @Test
   public void testJsonObjectHandler() {
-    deploy("test_service_jsonObjectHandler.js");
-    await();
+    execute("/test_service_jsonObjectHandler.js");
   }
 
   @Test
   public void testJsonObjectNullHandler() {
-    deploy("test_service_jsonObjectNullHandler.js");
-    await();
+    execute("/test_service_jsonObjectNullHandler.js");
   }
 
   @Test
   public void testJsonArrayHandler() {
-    deploy("test_service_jsonArrayHandler.js");
-    await();
+    execute("/test_service_jsonArrayHandler.js");
   }
 
   @Test
   public void testJsonArrayNullHandler() {
-    deploy("test_service_jsonArrayNullHandler.js");
-    await();
+    execute("/test_service_jsonArrayNullHandler.js");
   }
 
   @Test
   public void testDataObjectHandler() {
-    deploy("test_service_dataObjectHandler.js");
-    await();
+    execute("/test_service_dataObjectHandler.js");
   }
 
   @Test
   public void testDataObjectNullHandler() {
-    deploy("test_service_dataObjectNullHandler.js");
-    await();
+    execute("/test_service_dataObjectNullHandler.js");
   }
 
   @Test
   public void testVoidHandler() {
-    deploy("test_service_voidHandler.js");
-    await();
+    execute("/test_service_voidHandler.js");
   }
 
   @Test
   public void testFluentMethod() {
-    deploy("test_service_fluentMethod.js");
-    await();
+    execute("/test_service_fluentMethod.js");
   }
 
   @Test
   public void testFluentNoParams() {
-    deploy("test_service_fluentNoParams.js");
-    await();
+    execute("/test_service_fluentNoParams.js");
   }
 
   @Test
   public void testFailingMethod() {
-    deploy("test_service_failingMethod.js");
-    await();
+    execute("/test_service_failingMethod.js");
   }
 
   @Test
   public void testListStringHandler() {
-    deploy("test_service_listStringHandler.js");
-    await();
+    execute("/test_service_listStringHandler.js");
   }
 
   @Test
   public void testListByteHandler() {
-    deploy("test_service_listByteHandler.js");
-    await();
+    execute("/test_service_listByteHandler.js");
   }
 
   @Test
   public void testListShortHandler() {
-    deploy("test_service_listShortHandler.js");
-    await();
+    execute("/test_service_listShortHandler.js");
   }
 
   @Test
   public void testListIntHandler() {
-    deploy("test_service_listIntHandler.js");
-    await();
+    execute("/test_service_listIntHandler.js");
   }
 
   @Test
   public void testListLongHandler() {
-    deploy("test_service_listLongHandler.js");
-    await();
+    execute("/test_service_listLongHandler.js");
   }
 
   @Test
   public void testListFloatHandler() {
-    deploy("test_service_listFloatHandler.js");
-    await();
+    execute("/test_service_listFloatHandler.js");
   }
 
   @Test
   public void testListDoubleHandler() {
-    deploy("test_service_listDoubleHandler.js");
-    await();
+    execute("/test_service_listDoubleHandler.js");
   }
 
   @Test
   public void testListCharHandler() {
-    deploy("test_service_listCharHandler.js");
-    await();
+    execute("/test_service_listCharHandler.js");
   }
 
   @Test
   public void testListBoolHandler() {
-    deploy("test_service_listBoolHandler.js");
-    await();
+    execute("/test_service_listBoolHandler.js");
   }
 
   @Test
   public void testListJsonObjectHandler() {
-    deploy("test_service_listJsonObjectHandler.js");
-    await();
+    execute("/test_service_listJsonObjectHandler.js");
   }
 
   @Test
   public void testListJsonArrayHandler() {
-    deploy("test_service_listJsonArrayHandler.js");
-    await();
+    execute("/test_service_listJsonArrayHandler.js");
   }
 
   @Test
   public void testListDataObjectHandler() {
-    deploy("test_service_listDataObjectHandler.js");
-    await();
+    execute("/test_service_listDataObjectHandler.js");
   }
 
   @Test
   public void testSetStringHandler() {
-    deploy("test_service_setStringHandler.js");
-    await();
+    execute("/test_service_setStringHandler.js");
+
   }
 
   @Test
   public void testSetByteHandler() {
-    deploy("test_service_setByteHandler.js");
-    await();
+    execute("/test_service_setByteHandler.js");
   }
 
   @Test
   public void testSetShortHandler() {
-    deploy("test_service_setShortHandler.js");
-    await();
+    execute("/test_service_setShortHandler.js");
   }
 
   @Test
   public void testSetIntHandler() {
-    deploy("test_service_setIntHandler.js");
-    await();
+    execute("/test_service_setIntHandler.js");
   }
 
   @Test
   public void testSetLongHandler() {
-    deploy("test_service_setLongHandler.js");
-    await();
+    execute("/test_service_setLongHandler.js");
   }
 
   @Test
   public void testSetFloatHandler() {
-    deploy("test_service_setFloatHandler.js");
-    await();
+    execute("/test_service_setFloatHandler.js");
   }
 
   @Test
   public void testSetDoubleHandler() {
-    deploy("test_service_setDoubleHandler.js");
-    await();
+    execute("/test_service_setDoubleHandler.js");
   }
 
   @Test
   public void testSetCharHandler() {
-    deploy("test_service_setCharHandler.js");
-    await();
+    execute("/test_service_setCharHandler.js");
   }
 
   @Test
   public void testSetBoolHandler() {
-    deploy("test_service_setBoolHandler.js");
-    await();
+    execute("/test_service_setBoolHandler.js");
   }
 
   @Test
   public void testSetJsonObjectHandler() {
-    deploy("test_service_setJsonObjectHandler.js");
-    await();
+    execute("/test_service_setJsonObjectHandler.js");
   }
 
   @Test
   public void testSetJsonArrayHandler() {
-    deploy("test_service_setJsonArrayHandler.js");
-    await();
+    execute("/test_service_setJsonArrayHandler.js");
   }
 
   @Test
   public void testSetDataObjectHandler() {
-    deploy("test_service_setDataObjectHandler.js");
-    await();
+    execute("/test_service_setDataObjectHandler.js");
   }
 
   @Test
   public void testProxyIgnore() {
-    deploy("test_service_proxyIgnore.js");
-    await();
+    execute("/test_service_proxyIgnore.js");
   }
 
   @Test
   public void testConnection() {
-    deploy("test_service_connection.js");
-    await();
+    execute("/test_service_connection.js");
   }
 
   @Test
@@ -419,8 +384,7 @@ public class JSServiceProxyTest extends VertxTestBase {
     consumer.unregister();
     long timeoutSeconds = 2;
     consumer = ProxyHelper.registerService(TestService.class, vertx, service, Addresses.SERVICE_ADDRESS, timeoutSeconds);
-    deploy("test_service_connectionTimeout.js");
-    await();
+    execute("/test_service_connectionTimeout.js");
   }
 
   @Test
@@ -428,19 +392,16 @@ public class JSServiceProxyTest extends VertxTestBase {
     consumer.unregister();
     long timeoutSeconds = 2;
     consumer = ProxyHelper.registerService(TestService.class, vertx, service, Addresses.SERVICE_ADDRESS, timeoutSeconds);
-    deploy("test_service_connectionWithCloseFutureTimeout.js");
-    await();
+    execute("/test_service_connectionWithCloseFutureTimeout.js");
   }
 
   @Test
   public void testLongDelivery1() {
-    deploy("test_service_longDeliverySuccess.js");
-    await();
+    execute("/test_service_longDeliverySuccess.js");
   }
 
   @Test
   public void testLongDelivery2() {
-    deploy("test_service_longDeliveryFailed.js");
-    await();
+    execute("/test_service_longDeliveryFailed.js");
   }
 }

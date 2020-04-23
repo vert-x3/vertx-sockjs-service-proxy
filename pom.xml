@@ -14,7 +14,6 @@
   <properties>
     <codegen.rxjava.deprecated>true</codegen.rxjava.deprecated>
     <stack.version>4.0.0-SNAPSHOT</stack.version>
-    <es4x.version>0.11.1-SNAPSHOT</es4x.version>
     <graalvm.version>20.0.0</graalvm.version>
   </properties>
 
@@ -75,12 +74,6 @@
       <classifier>client</classifier>
       <scope>test</scope>
       <type>js</type>
-    </dependency>
-    <dependency>
-      <groupId>io.reactiverse</groupId>
-      <artifactId>es4x</artifactId>
-      <version>${es4x.version}</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -197,24 +190,6 @@
               <includeClassifiers>client</includeClassifiers>
               <outputDirectory>${project.build.testOutputDirectory}/vertx-js</outputDirectory>
               <stripVersion>true</stripVersion>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.8</version>
-        <executions>
-          <execution>
-            <id>rename-vertx-eventbus</id>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <phase>process-test-resources</phase>
-            <configuration>
-              <target>
-                <move file="${project.build.testOutputDirectory}/vertx-js/vertx-web-client.js" tofile="${project.build.testOutputDirectory}/vertx-js/vertx-eventbus.js"/>
-              </target>
             </configuration>
           </execution>
         </executions>
