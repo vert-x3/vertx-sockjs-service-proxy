@@ -1,11 +1,10 @@
-var EventBus = require('vertx-js/vertx-eventbus');
 var bus = new EventBus();
 bus.enableReconnect(true);
 
 bus.onopen = function () {
-  setTimeout(function () {
+  vertx.setTimer(250, function () {
   	bus.sockJSConn.close();
-  }, 250);
+  });
 };
 
 bus.onreconnect = function () {
