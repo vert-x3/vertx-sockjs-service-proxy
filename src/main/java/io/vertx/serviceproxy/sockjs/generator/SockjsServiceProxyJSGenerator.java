@@ -2,6 +2,8 @@ package io.vertx.serviceproxy.sockjs.generator;
 
 import io.vertx.codegen.*;
 import io.vertx.codegen.doc.Token;
+import io.vertx.codegen.format.CamelCase;
+import io.vertx.codegen.format.SnakeCase;
 import io.vertx.codegen.type.*;
 import io.vertx.codegen.writer.CodeWriter;
 import io.vertx.serviceproxy.generator.model.ProxyMethodInfo;
@@ -34,7 +36,7 @@ public class SockjsServiceProxyJSGenerator extends AbstractSockjsServiceProxyGen
    * Generate the module name of a type
    */
   private String getModuleName(ClassTypeInfo type) {
-    return type.getModuleName() + "-js/" + Case.CAMEL.to(Case.SNAKE, type.getSimpleName());
+    return type.getModuleName() + "-js/" + CamelCase.INSTANCE.to(SnakeCase.INSTANCE, type.getSimpleName());
   }
 
   private void genMethod(ProxyModel model, String methodName, boolean genStatic, @SuppressWarnings("SameParameterValue") Predicate<MethodInfo> methodFilter, CodeWriter writer) {
