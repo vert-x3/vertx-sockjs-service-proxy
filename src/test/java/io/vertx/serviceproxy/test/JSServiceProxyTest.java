@@ -1,5 +1,6 @@
 package io.vertx.serviceproxy.test;
 
+import io.vertx.core.VertxOptions;
 import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.Addresses;
@@ -22,6 +23,11 @@ public class JSServiceProxyTest extends VertxTestBase {
   MessageConsumer<JsonObject> consumer;
 
   @Override
+  protected VertxOptions getOptions() {
+    return new VertxOptions().setEventLoopPoolSize(1);
+  }
+
+    @Override
   public void setUp() throws Exception {
     super.setUp();
     service = TestService.create(vertx);
