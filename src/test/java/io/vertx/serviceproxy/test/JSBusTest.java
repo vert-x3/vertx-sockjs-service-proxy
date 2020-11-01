@@ -32,7 +32,7 @@ public class JSBusTest extends VertxTestBase {
       // load sockjs mock
       eval(context, "/node_modules/sockjs-client.js");
       // load sockjs client
-      eval(context, "/vertx-js/vertx-web-client.js");
+      eval(context, "/vertx-js/vertx-eventbus.js");
       // load the test
       vertx.runOnContext(v -> eval(context, script));
       await();
