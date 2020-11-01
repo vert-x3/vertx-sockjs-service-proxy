@@ -75,6 +75,7 @@
       <classifier>client</classifier>
       <scope>test</scope>
       <type>js</type>
+      <version>4.0.0.Beta3</version>
     </dependency>
   </dependencies>
 
