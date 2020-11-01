@@ -49,7 +49,7 @@ public class JSServiceProxyTest extends VertxTestBase {
       // load sockjs mock
       eval(context, "/node_modules/sockjs-client.js");
       // load sockjs client
-      eval(context, "/vertx-js/vertx-web-client.js");
+      eval(context, "/vertx-js/vertx-eventbus.js");
       // load the service dependencies
       eval(context, "/test-js/test_connection-proxy.js");
       eval(context, "/test-js/test_connection_with_close_future-proxy.js");
@@ -311,7 +311,6 @@ public class JSServiceProxyTest extends VertxTestBase {
   @Test
   public void testSetStringHandler() {
     execute("/test_service_setStringHandler.js");
-
   }
 
   @Test
