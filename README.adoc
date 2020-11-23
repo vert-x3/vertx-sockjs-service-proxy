@@ -1,4 +1,4 @@
 = Vert.x SockJS Service Proxies
 
-image:https://travis-ci.org/vert-x3/vertx-sockjs-service-proxy.svg?branch=master["Build Status",link="https://travis-ci.org/vert-x3/vertx-sockjs-service-proxy"]
+image:https://github.com/vert-x3/vertx-sockjs-service-proxy/workflows/CI/badge.svg?branch=master["Build Status", link="https://github.com/vert-x3/vertx-sockjs-service-proxy/actions?query=workflow%3ACI"]
 
