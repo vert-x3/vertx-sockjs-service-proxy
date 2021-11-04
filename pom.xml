@@ -13,7 +13,7 @@
           
     </parent>
       
-    <version>4.1.6-SNAPSHOT</version>
+    <version>4.1.6</version>
       
     <artifactId>vertx-sockjs-service-proxy</artifactId>
       
@@ -21,7 +21,7 @@
             
         <codegen.rxjava.deprecated>true</codegen.rxjava.deprecated>
             
-        <stack.version>4.1.6-SNAPSHOT</stack.version>
+        <stack.version>4.1.6</stack.version>
             
         <graalvm.version>20.0.0</graalvm.version>
             
