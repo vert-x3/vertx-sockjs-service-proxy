@@ -13,7 +13,7 @@
           
     </parent>
       
-    <version>3.9.11</version>
+    <version>3.9.12-SNAPSHOT</version>
       
     <artifactId>vertx-sockjs-service-proxy</artifactId>
       
@@ -21,7 +21,7 @@
             
         <codegen.rxjava.deprecated>true</codegen.rxjava.deprecated>
             
-        <stack.version>3.9.11</stack.version>
+        <stack.version>3.9.12-SNAPSHOT</stack.version>
           
     </properties>
       
