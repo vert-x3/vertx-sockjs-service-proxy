@@ -8,12 +8,12 @@
     <version>38</version>
   </parent>
 
-  <version>4.3.4</version>
+  <version>4.3.5-SNAPSHOT</version>
   <artifactId>vertx-sockjs-service-proxy</artifactId>
 
   <properties>
     <codegen.rxjava.deprecated>true</codegen.rxjava.deprecated>
-    <stack.version>4.3.4</stack.version>
+    <stack.version>4.3.5-SNAPSHOT</stack.version>
     <graalvm.version>20.0.0</graalvm.version>
     <jar.manifest>${project.basedir}/src/main/resources/META-INF/MANIFEST.MF</jar.manifest>
   </properties>
