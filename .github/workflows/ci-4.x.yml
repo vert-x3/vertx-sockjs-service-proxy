@@ -1,4 +1,4 @@
-name: CI (4.x)
+name: vertx-sockjs-service-proxy (4.x)
 on:
   push:
     branches:
