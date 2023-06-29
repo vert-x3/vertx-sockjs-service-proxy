@@ -34,13 +34,13 @@ public class TestConnectionWithCloseFutureImpl implements TestConnectionWithClos
   }
 
   @Override
-  public void close(Handler<AsyncResult<Void>> handler) {
+  public Future<Void> close() {
     vertx.eventBus().send("closeCalled", "blah");
-    handler.handle(Future.succeededFuture());
+    return Future.succeededFuture();
   }
 
   @Override
-  public void someMethod(Handler<AsyncResult<String>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture("the_result"));
+  public Future<String> someMethod() {
+    return Future.succeededFuture("the_result");
   }
 }

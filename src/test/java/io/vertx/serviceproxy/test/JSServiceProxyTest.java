@@ -234,11 +234,6 @@ public class JSServiceProxyTest extends VertxTestBase {
   }
 
   @Test
-  public void testFluentMethod() {
-    execute("/test_service_fluentMethod.js");
-  }
-
-  @Test
   public void testFluentNoParams() {
     execute("/test_service_fluentNoParams.js");
   }

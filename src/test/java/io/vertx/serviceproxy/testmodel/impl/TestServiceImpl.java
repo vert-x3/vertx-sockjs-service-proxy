@@ -16,6 +16,7 @@
 
 package io.vertx.serviceproxy.testmodel.impl;
 
+import io.vertx.codegen.annotations.Nullable;
 import io.vertx.core.*;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -39,13 +40,13 @@ public class TestServiceImpl implements TestService {
   }
 
   @Override
-  public void createConnection(String str, Handler<AsyncResult<TestConnection>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(new TestConnectionImpl(vertx, str)));
+  public Future<TestConnection> createConnection(String str) {
+    return Future.succeededFuture(new TestConnectionImpl(vertx, str));
   }
 
   @Override
-  public void createConnectionWithCloseFuture(Handler<AsyncResult<TestConnectionWithCloseFuture>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(new TestConnectionWithCloseFutureImpl(vertx)));
+  public Future<TestConnectionWithCloseFuture> createConnectionWithCloseFuture() {
+    return Future.succeededFuture(new TestConnectionWithCloseFutureImpl(vertx));
   }
 
   @Override
@@ -114,13 +115,13 @@ public class TestServiceImpl implements TestService {
   }
 
   @Override
-  public void enumTypeAsResult(Handler<AsyncResult<SomeEnum>> handler) {
-    handler.handle(Future.succeededFuture(SomeEnum.WIBBLE));
+  public Future<SomeEnum> enumTypeAsResult() {
+    return Future.succeededFuture(SomeEnum.WIBBLE);
   }
 
   @Override
-  public void enumTypeAsResultNull(Handler<AsyncResult<SomeEnum>> handler) {
-    handler.handle(Future.succeededFuture(null));
+  public Future<@Nullable SomeEnum> enumTypeAsResultNull() {
+    return Future.succeededFuture(null);
   }
 
   @Override
@@ -209,135 +210,128 @@ public class TestServiceImpl implements TestService {
   }
 
   @Override
-  public void stringHandler(Handler<AsyncResult<String>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture("foobar"));
+  public Future<String> stringHandler() {
+    return (Future.succeededFuture("foobar"));
   }
 
   @Override
-  public void stringNullHandler(Handler<AsyncResult<String>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(null));
+  public Future<String> stringNullHandler() {
+    return (Future.succeededFuture(null));
   }
 
   @Override
-  public void byteHandler(Handler<AsyncResult<Byte>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture((byte)123));
+  public Future<Byte> byteHandler() {
+    return (Future.succeededFuture((byte)123));
   }
 
   @Override
-  public void byteNullHandler(Handler<AsyncResult<Byte>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(null));
+  public Future<Byte> byteNullHandler() {
+    return (Future.succeededFuture(null));
   }
 
   @Override
-  public void shortHandler(Handler<AsyncResult<Short>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture((short)1234));
+  public Future<Short> shortHandler() {
+    return (Future.succeededFuture((short)1234));
   }
 
   @Override
-  public void shortNullHandler(Handler<AsyncResult<Short>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(null));
+  public Future<Short> shortNullHandler() {
+    return (Future.succeededFuture(null));
   }
 
   @Override
-  public void intHandler(Handler<AsyncResult<Integer>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(12345));
+  public Future<Integer> intHandler() {
+    return (Future.succeededFuture(12345));
   }
 
   @Override
-  public void intNullHandler(Handler<AsyncResult<Integer>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(null));
+  public Future<Integer> intNullHandler() {
+    return (Future.succeededFuture(null));
   }
 
   @Override
-  public void longHandler(Handler<AsyncResult<Long>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(123456L));
+  public Future<Long> longHandler() {
+    return (Future.succeededFuture(123456L));
   }
 
   @Override
-  public void longNullHandler(Handler<AsyncResult<Long>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(null));
+  public Future<Long> longNullHandler() {
+    return (Future.succeededFuture(null));
   }
 
   @Override
-  public void floatHandler(Handler<AsyncResult<Float>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(12.34f));
+  public Future<Float> floatHandler() {
+    return (Future.succeededFuture(12.34f));
   }
 
   @Override
-  public void floatNullHandler(Handler<AsyncResult<Float>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(null));
+  public Future<Float> floatNullHandler() {
+    return (Future.succeededFuture(null));
   }
 
   @Override
-  public void doubleHandler(Handler<AsyncResult<Double>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(12.3456d));
+  public Future<Double> doubleHandler() {
+    return (Future.succeededFuture(12.3456d));
   }
 
   @Override
-  public void doubleNullHandler(Handler<AsyncResult<Double>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(null));
+  public Future<Double> doubleNullHandler() {
+    return (Future.succeededFuture(null));
   }
 
   @Override
-  public void charHandler(Handler<AsyncResult<Character>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture('X'));
+  public Future<Character> charHandler() {
+    return (Future.succeededFuture('X'));
   }
 
   @Override
-  public void charNullHandler(Handler<AsyncResult<Character>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(null));
+  public Future<Character> charNullHandler() {
+    return (Future.succeededFuture(null));
   }
 
   @Override
-  public void booleanHandler(Handler<AsyncResult<Boolean>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(true));
+  public Future<Boolean> booleanHandler() {
+    return (Future.succeededFuture(true));
   }
 
   @Override
-  public void booleanNullHandler(Handler<AsyncResult<Boolean>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(null));
+  public Future<Boolean> booleanNullHandler() {
+    return (Future.succeededFuture(null));
   }
 
   @Override
-  public void jsonObjectHandler(Handler<AsyncResult<JsonObject>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(new JsonObject().put("blah", "wibble")));
+  public Future<JsonObject> jsonObjectHandler() {
+    return (Future.succeededFuture(new JsonObject().put("blah", "wibble")));
   }
 
   @Override
-  public void jsonObjectNullHandler(Handler<AsyncResult<JsonObject>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(null));
+  public Future<JsonObject> jsonObjectNullHandler() {
+    return (Future.succeededFuture(null));
   }
 
   @Override
-  public void jsonArrayHandler(Handler<AsyncResult<JsonArray>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(new JsonArray().add("blurrg")));
+  public Future<JsonArray> jsonArrayHandler() {
+    return (Future.succeededFuture(new JsonArray().add("blurrg")));
   }
 
   @Override
-  public void jsonArrayNullHandler(Handler<AsyncResult<JsonArray>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(null));
+  public Future<JsonArray> jsonArrayNullHandler() {
+    return (Future.succeededFuture(null));
   }
 
   @Override
-  public void dataObjectHandler(Handler<AsyncResult<TestDataObject>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(new TestDataObject().setString("foo").setNumber(123).setBool(true)));
+  public Future<TestDataObject> dataObjectHandler() {
+    return (Future.succeededFuture(new TestDataObject().setString("foo").setNumber(123).setBool(true)));
   }
 
   @Override
-  public void dataObjectNullHandler(Handler<AsyncResult<TestDataObject>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(null));
+  public Future<TestDataObject> dataObjectNullHandler() {
+    return (Future.succeededFuture(null));
   }
 
   @Override
-  public void voidHandler(Handler<AsyncResult<Void>> resultHandler) {
-    resultHandler.handle(Future.succeededFuture(null));
-  }
-
-  @Override
-  public TestService fluentMethod(String str, Handler<AsyncResult<String>> resultHandler) {
-    assertEquals("foo", str);
-    resultHandler.handle(Future.succeededFuture("bar"));
-    return this;
+  public Future<Void> voidHandler() {
+    return (Future.succeededFuture(null));
   }
 
   @Override
@@ -347,154 +341,154 @@ public class TestServiceImpl implements TestService {
   }
 
   @Override
-  public void failingMethod(Handler<AsyncResult<JsonObject>> resultHandler) {
-    resultHandler.handle(Future.failedFuture(new VertxException("wibble")));
+  public Future<JsonObject> failingMethod() {
+    return (Future.failedFuture(new VertxException("wibble")));
   }
 
   @Override
-  public void invokeWithMessage(JsonObject object, String str, int i,  char chr, SomeEnum senum, Handler<AsyncResult<String>> resultHandler) {
+  public Future<String> invokeWithMessage(JsonObject object, String str, int i,  char chr, SomeEnum senum) {
     assertEquals("bar", object.getString("foo"));
     assertEquals("blah", str);
     assertEquals(1234, i);
     assertEquals('X', chr);
     assertEquals(SomeEnum.BAR, senum);
-    resultHandler.handle(Future.succeededFuture("goats"));
+    return (Future.succeededFuture("goats"));
   }
 
   @Override
-  public void listStringHandler(Handler<AsyncResult<List<String>>> resultHandler) {
+  public Future<List<String>> listStringHandler() {
     List<String> list = Arrays.asList("foo", "bar", "wibble");
-    resultHandler.handle(Future.succeededFuture(list));
+    return (Future.succeededFuture(list));
   }
 
   @Override
-  public void listByteHandler(Handler<AsyncResult<List<Byte>>> resultHandler) {
+  public Future<List<Byte>> listByteHandler() {
     List<Byte> list = Arrays.asList((byte)1, (byte)2, (byte)3);
-    resultHandler.handle(Future.succeededFuture(list));
+    return (Future.succeededFuture(list));
   }
 
   @Override
-  public void listShortHandler(Handler<AsyncResult<List<Short>>> resultHandler) {
+  public Future<List<Short>> listShortHandler() {
     List<Short> list = Arrays.asList((short)11, (short)12, (short)13);
-    resultHandler.handle(Future.succeededFuture(list));
+    return (Future.succeededFuture(list));
   }
 
   @Override
-  public void listIntHandler(Handler<AsyncResult<List<Integer>>> resultHandler) {
+  public Future<List<Integer>> listIntHandler() {
     List<Integer> list = Arrays.asList(100, 101, 102);
-    resultHandler.handle(Future.succeededFuture(list));
+    return (Future.succeededFuture(list));
   }
 
   @Override
-  public void listLongHandler(Handler<AsyncResult<List<Long>>> resultHandler) {
+  public Future<List<Long>> listLongHandler() {
     List<Long> list = Arrays.asList(1000L, 1001L, 1002L);
-    resultHandler.handle(Future.succeededFuture(list));
+    return (Future.succeededFuture(list));
   }
 
   @Override
-  public void listFloatHandler(Handler<AsyncResult<List<Float>>> resultHandler) {
+  public Future<List<Float>> listFloatHandler() {
     List<Float> list = Arrays.asList(1.1f, 1.2f, 1.3f);
-    resultHandler.handle(Future.succeededFuture(list));
+    return (Future.succeededFuture(list));
   }
 
   @Override
-  public void listDoubleHandler(Handler<AsyncResult<List<Double>>> resultHandler) {
+  public Future<List<Double>> listDoubleHandler() {
     List<Double> list = Arrays.asList(1.11d, 1.12d, 1.13d);
-    resultHandler.handle(Future.succeededFuture(list));
+    return (Future.succeededFuture(list));
   }
 
   @Override
-  public void listCharHandler(Handler<AsyncResult<List<Character>>> resultHandler) {
+  public Future<List<Character>> listCharHandler() {
     List<Character> list = Arrays.asList('X', 'Y', 'Z');
-    resultHandler.handle(Future.succeededFuture(list));
+    return (Future.succeededFuture(list));
   }
 
   @Override
-  public void listBoolHandler(Handler<AsyncResult<List<Boolean>>> resultHandler) {
+  public Future<List<Boolean>> listBoolHandler() {
     List<Boolean> list = Arrays.asList(true, false, true);
-    resultHandler.handle(Future.succeededFuture(list));
+    return (Future.succeededFuture(list));
   }
 
   @Override
-  public void listJsonObjectHandler(Handler<AsyncResult<List<JsonObject>>> resultHandler) {
+  public Future<List<JsonObject>> listJsonObjectHandler() {
     List<JsonObject> list = Arrays.asList(new JsonObject().put("a", "foo"),
       new JsonObject().put("b", "bar"), new JsonObject().put("c", "wibble"));
-    resultHandler.handle(Future.succeededFuture(list));
+    return (Future.succeededFuture(list));
   }
 
   @Override
-  public void listJsonArrayHandler(Handler<AsyncResult<List<JsonArray>>> resultHandler) {
+  public Future<List<JsonArray>> listJsonArrayHandler() {
     List<JsonArray> list = Arrays.asList(new JsonArray().add("foo"),
       new JsonArray().add("bar"), new JsonArray().add("wibble"));
-    resultHandler.handle(Future.succeededFuture(list));
+    return (Future.succeededFuture(list));
   }
 
   @Override
-  public void setStringHandler(Handler<AsyncResult<Set<String>>> resultHandler) {
+  public Future<Set<String>> setStringHandler() {
     Set<String> set = new LinkedHashSet<>(Arrays.asList("foo", "bar", "wibble"));
-    resultHandler.handle(Future.succeededFuture(set));
+    return (Future.succeededFuture(set));
   }
 
   @Override
-  public void setByteHandler(Handler<AsyncResult<Set<Byte>>> resultHandler) {
+  public Future<Set<Byte>> setByteHandler() {
     Set<Byte> set = new LinkedHashSet<>(Arrays.asList((byte)1, (byte)2, (byte)3));
-    resultHandler.handle(Future.succeededFuture(set));
+    return (Future.succeededFuture(set));
   }
 
   @Override
-  public void setShortHandler(Handler<AsyncResult<Set<Short>>> resultHandler) {
+  public Future<Set<Short>> setShortHandler() {
     Set<Short> set = new LinkedHashSet<>(Arrays.asList((short)11, (short)12, (short)13));
-    resultHandler.handle(Future.succeededFuture(set));
+    return (Future.succeededFuture(set));
   }
 
   @Override
-  public void setIntHandler(Handler<AsyncResult<Set<Integer>>> resultHandler) {
+  public Future<Set<Integer>> setIntHandler() {
     Set<Integer> set = new LinkedHashSet<>(Arrays.asList(100, 101, 102));
-    resultHandler.handle(Future.succeededFuture(set));
+    return (Future.succeededFuture(set));
   }
 
   @Override
-  public void setLongHandler(Handler<AsyncResult<Set<Long>>> resultHandler) {
+  public Future<Set<Long>> setLongHandler() {
     Set<Long> set = new LinkedHashSet<>(Arrays.asList(1000L, 1001L, 1002L));
-    resultHandler.handle(Future.succeededFuture(set));
+    return (Future.succeededFuture(set));
   }
 
   @Override
-  public void setFloatHandler(Handler<AsyncResult<Set<Float>>> resultHandler) {
+  public Future<Set<Float>> setFloatHandler() {
     Set<Float> set = new LinkedHashSet<>(Arrays.asList(1.1f, 1.2f, 1.3f));
-    resultHandler.handle(Future.succeededFuture(set));
+    return (Future.succeededFuture(set));
   }
 
   @Override
-  public void setDoubleHandler(Handler<AsyncResult<Set<Double>>> resultHandler) {
+  public Future<Set<Double>> setDoubleHandler() {
     Set<Double> set = new LinkedHashSet<>(Arrays.asList(1.11d, 1.12d, 1.13d));
-    resultHandler.handle(Future.succeededFuture(set));
+    return (Future.succeededFuture(set));
   }
 
   @Override
-  public void setCharHandler(Handler<AsyncResult<Set<Character>>> resultHandler) {
+  public Future<Set<Character>> setCharHandler() {
     Set<Character> set = new LinkedHashSet<>(Arrays.asList('X', 'Y', 'Z'));
-    resultHandler.handle(Future.succeededFuture(set));
+    return (Future.succeededFuture(set));
   }
 
   @Override
-  public void setBoolHandler(Handler<AsyncResult<Set<Boolean>>> resultHandler) {
+  public Future<Set<Boolean>> setBoolHandler() {
     Set<Boolean> set = new LinkedHashSet<>(Arrays.asList(true, false, true));
-    resultHandler.handle(Future.succeededFuture(set));
+    return (Future.succeededFuture(set));
   }
 
   @Override
-  public void setJsonObjectHandler(Handler<AsyncResult<Set<JsonObject>>> resultHandler) {
+  public Future<Set<JsonObject>> setJsonObjectHandler() {
     Set<JsonObject> set = new LinkedHashSet<>(Arrays.asList(new JsonObject().put("a", "foo"),
       new JsonObject().put("b", "bar"), new JsonObject().put("c", "wibble")));
-    resultHandler.handle(Future.succeededFuture(set));
+    return (Future.succeededFuture(set));
   }
 
   @Override
-  public void setJsonArrayHandler(Handler<AsyncResult<Set<JsonArray>>> resultHandler) {
+  public Future<Set<JsonArray>> setJsonArrayHandler() {
     Set<JsonArray> set = new LinkedHashSet<>(Arrays.asList(new JsonArray().add("foo"),
       new JsonArray().add("bar"), new JsonArray().add("wibble")));
-    resultHandler.handle(Future.succeededFuture(set));
+    return (Future.succeededFuture(set));
   }
 
   @Override
@@ -503,26 +497,30 @@ public class TestServiceImpl implements TestService {
   }
 
   @Override
-  public void listDataObjectHandler(Handler<AsyncResult<List<TestDataObject>>> resultHandler) {
+  public Future<List<TestDataObject>> listDataObjectHandler() {
     List<TestDataObject> list =
         Arrays.asList(new TestDataObject().setNumber(1).setString("String 1").setBool(false), new TestDataObject().setNumber(2).setString("String 2").setBool(true));
-    resultHandler.handle(Future.succeededFuture(list));
+    return (Future.succeededFuture(list));
   }
 
   @Override
-  public void setDataObjectHandler(Handler<AsyncResult<Set<TestDataObject>>> resultHandler) {
+  public Future<Set<TestDataObject>> setDataObjectHandler() {
     Set<TestDataObject> set =
         new LinkedHashSet<>(Arrays.asList(new TestDataObject().setNumber(1).setString("String 1").setBool(false), new TestDataObject().setNumber(2).setString("String 2").setBool(true)));
-    resultHandler.handle(Future.succeededFuture(set));
+    return (Future.succeededFuture(set));
   }
 
   @Override
-  public void longDeliverySuccess(Handler<AsyncResult<String>> resultHandler) {
-    vertx.setTimer(10*1000L, tid -> resultHandler.handle(Future.succeededFuture("blah")));
+  public Future<String> longDeliverySuccess() {
+    return Future.future(resultHandler -> {
+      vertx.setTimer(10*1000L, tid -> resultHandler.complete("blah"));
+    });
   }
 
   @Override
-  public void longDeliveryFailed(Handler<AsyncResult<String>> resultHandler) {
-    vertx.setTimer(30*1000L, tid -> resultHandler.handle(Future.succeededFuture("blah")));
+  public Future<String> longDeliveryFailed() {
+    return Future.future(resultHandler -> {
+      vertx.setTimer(30*1000L, tid -> resultHandler.complete("blah"));
+    });
   }
 }

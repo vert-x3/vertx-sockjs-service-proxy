@@ -105,7 +105,11 @@ public class SockjsServiceProxyJSGenerator extends AbstractSockjsServiceProxyGen
         for (MethodInfo m : methodList) {
           writer.print(mcnt++ == 0 ? "if" : "else if");
           int paramSize = m.getParams().size();
-          writer.format(" (__args.length === %s", paramSize);
+          if (m.getKind() == MethodKind.FUTURE) {
+            writer.format(" (__args.length === %s", paramSize + 1);
+          } else {
+            writer.format(" (__args.length === %s", paramSize);
+          }
           int cnt = 0;
           if (paramSize > 0) {
             writer.print(" && ");
@@ -342,15 +346,10 @@ public class SockjsServiceProxyJSGenerator extends AbstractSockjsServiceProxyGen
   }
   private void genMethodCall(MethodInfo method, PrintWriter writer){
     List<ParamInfo> params = method.getParams();
-    int psize = params.size();
-    ParamInfo lastParam = psize > 0 ? params.get(psize - 1) : null;
-    boolean hasResultHandler = lastParam != null && lastParam.getType().getKind() == HANDLER && ((ParameterizedTypeInfo) lastParam.getType()).getArg(0).getKind() == ASYNC_RESULT;
-    if (hasResultHandler) {
-      psize--;
-    }
+    boolean hasResultHandler = method.getKind() == MethodKind.FUTURE;
     writer.print("j_eb.send(j_address, {");
     boolean first = true;
-    for (int pcnt = 0; pcnt < psize; pcnt++) {
+    for (int pcnt = 0; pcnt < params.size(); pcnt++) {
       if (first) {
         first = false;
       } else {
@@ -368,10 +367,9 @@ public class SockjsServiceProxyJSGenerator extends AbstractSockjsServiceProxyGen
     }
     writer.format("}, {\"action\":\"%s\"}", method.getName());
     if (hasResultHandler) {
-      ParameterizedTypeInfo handlerType = (ParameterizedTypeInfo) lastParam.getType();
-      ParameterizedTypeInfo asyncResultType = (ParameterizedTypeInfo) handlerType.getArg(0);
-      TypeInfo resultType = asyncResultType.getArg(0);
-      writer.format(", function(err, result) { __args[%d](err, result && ", psize);
+      ParameterizedTypeInfo futureType = (ParameterizedTypeInfo) method.getReturnType();
+      TypeInfo resultType = futureType.getArg(0);
+      writer.format(", function(err, result) { __args[%d](err, result && ", params.size());
       ClassKind resultKind = resultType.getKind();
       if (resultType.getKind() == API) {
         writer.format("new %s(j_eb, result.headers.proxyaddr)", resultType.getSimpleName());
