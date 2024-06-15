@@ -1,11 +1,11 @@
 package io.vertx.serviceproxy.sockjs.generator;
 
-import io.vertx.codegen.*;
-import io.vertx.codegen.doc.Token;
+import io.vertx.codegen.processor.*;
+import io.vertx.codegen.processor.doc.Token;
 import io.vertx.codegen.format.CamelCase;
 import io.vertx.codegen.format.SnakeCase;
-import io.vertx.codegen.type.*;
-import io.vertx.codegen.writer.CodeWriter;
+import io.vertx.codegen.processor.type.*;
+import io.vertx.codegen.processor.writer.CodeWriter;
 import io.vertx.serviceproxy.generator.model.ProxyMethodInfo;
 import io.vertx.serviceproxy.generator.model.ProxyModel;
 
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static io.vertx.codegen.type.ClassKind.*;
+import static io.vertx.codegen.processor.type.ClassKind.*;
 
 public class SockjsServiceProxyJSGenerator extends AbstractSockjsServiceProxyGenerator {
   SockjsServiceProxyJSGenerator() {

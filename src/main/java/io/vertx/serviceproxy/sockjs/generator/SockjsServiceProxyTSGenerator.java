@@ -1,11 +1,11 @@
 package io.vertx.serviceproxy.sockjs.generator;
 
 import io.vertx.codegen.format.CamelCase;
-import io.vertx.codegen.Helper;
-import io.vertx.codegen.MethodInfo;
+import io.vertx.codegen.processor.Helper;
+import io.vertx.codegen.processor.MethodInfo;
 import io.vertx.codegen.format.SnakeCase;
-import io.vertx.codegen.type.*;
-import io.vertx.codegen.writer.CodeWriter;
+import io.vertx.codegen.processor.type.*;
+import io.vertx.codegen.processor.writer.CodeWriter;
 import io.vertx.serviceproxy.generator.model.ProxyModel;
 
 import java.io.StringWriter;

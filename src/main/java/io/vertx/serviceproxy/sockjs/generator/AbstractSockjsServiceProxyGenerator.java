@@ -1,14 +1,14 @@
 package io.vertx.serviceproxy.sockjs.generator;
 
-import io.vertx.codegen.Generator;
-import io.vertx.codegen.MethodInfo;
+import io.vertx.codegen.processor.Generator;
+import io.vertx.codegen.processor.MethodInfo;
 import io.vertx.codegen.annotations.ModuleGen;
 import io.vertx.codegen.annotations.VertxGen;
-import io.vertx.codegen.doc.Tag;
-import io.vertx.codegen.type.ClassTypeInfo;
-import io.vertx.codegen.type.EnumTypeInfo;
-import io.vertx.codegen.type.ParameterizedTypeInfo;
-import io.vertx.codegen.type.TypeInfo;
+import io.vertx.codegen.processor.doc.Tag;
+import io.vertx.codegen.processor.type.ClassTypeInfo;
+import io.vertx.codegen.processor.type.EnumTypeInfo;
+import io.vertx.codegen.processor.type.ParameterizedTypeInfo;
+import io.vertx.codegen.processor.type.TypeInfo;
 import io.vertx.serviceproxy.generator.model.ProxyMethodInfo;
 import io.vertx.serviceproxy.generator.model.ProxyModel;
 
@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import static io.vertx.codegen.type.ClassKind.ENUM;
+import static io.vertx.codegen.processor.type.ClassKind.ENUM;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.ElementKind.INTERFACE;
 import static javax.lang.model.element.ElementKind.METHOD;
