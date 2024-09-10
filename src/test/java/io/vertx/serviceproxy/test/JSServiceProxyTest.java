@@ -8,9 +8,11 @@ import io.vertx.serviceproxy.testmodel.TestService;
 import io.vertx.test.core.VertxTestBase;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Source;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
@@ -34,10 +36,12 @@ public class JSServiceProxyTest extends VertxTestBase {
 
   private static void eval(Context context, String filename) {
     try {
+      InputStream is = JSBusTest.class.getResourceAsStream(filename);
+      Assert.assertNotNull(filename + " resolved to null", is);
       context.eval(
         Source.newBuilder(
           "js",
-          new InputStreamReader(JSBusTest.class.getResourceAsStream(filename)), filename).build());
+          new InputStreamReader(is), filename).build());
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

@@ -29,7 +29,7 @@ public class SockjsServiceProxyJSGenerator extends AbstractSockjsServiceProxyGen
   @Override
   public String filename(ProxyModel model) {
     ClassTypeInfo type = model.getType();
-    return "resources/" + type.getModuleName() + "-js/" + Helper.convertCamelCaseToUnderscores(type.getRaw().getSimpleName()) + "-proxy.js";
+    return type.getModuleName() + "-js/" + Helper.convertCamelCaseToUnderscores(type.getRaw().getSimpleName()) + "-proxy.js";
   }
 
   /**
