@@ -22,7 +22,6 @@ import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.serviceproxy.ProxyHelper;
 import io.vertx.serviceproxy.testmodel.impl.TestServiceImpl;
 
 import java.util.List;
@@ -38,16 +37,6 @@ public interface TestService {
 
   static TestService create(Vertx vertx) {
     return new TestServiceImpl(vertx);
-  }
-
-  static TestService createProxy(Vertx vertx, String address) {
-    return ProxyHelper.createProxy(TestService.class, vertx, address);
-  }
-
-  static TestService createProxyLongDelivery(Vertx vertx, String address) {
-    DeliveryOptions options = new DeliveryOptions();
-    options.setSendTimeout(20*1000L);
-    return ProxyHelper.createProxy(TestService.class, vertx, address, options);
   }
 
   Future<String> longDeliverySuccess();
