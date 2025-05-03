@@ -11,6 +11,12 @@
   <version>4.5.15-SNAPSHOT</version>
   <artifactId>vertx-sockjs-service-proxy</artifactId>
 
+  <scm>
+    <connection>scm:git:git@github.com:vert-x3/vertx-sockjs-service-proxy.git</connection>
+    <developerConnection>scm:git:git@github.com:vert-x3/vertx-sockjs-service-proxy.git</developerConnection>
+    <url>git@github.com:vert-x3/vertx-sockjs-service-proxy.git</url>
+  </scm>
+
   <properties>
     <codegen.rxjava.deprecated>true</codegen.rxjava.deprecated>
     <graalvm.version>20.0.0</graalvm.version>
