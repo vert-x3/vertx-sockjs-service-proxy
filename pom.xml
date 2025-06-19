@@ -10,6 +10,7 @@
 
   <version>4.5.16-SNAPSHOT</version>
   <artifactId>vertx-sockjs-service-proxy</artifactId>
+  <name>Vert.x SockJS Service Proxy</name>
 
   <scm>
     <connection>scm:git:git@github.com:vert-x3/vertx-sockjs-service-proxy.git</connection>
