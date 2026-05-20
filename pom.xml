@@ -8,8 +8,9 @@
     <version>12</version>
   </parent>
 
-  <version>5.1.0-SNAPSHOT</version>
+  <name>vertx-sockjs-service-proxy</name>
   <artifactId>vertx-sockjs-service-proxy</artifactId>
+  <version>5.1.0-SNAPSHOT</version>
 
   <scm>
     <connection>scm:git:git@github.com:vert-x3/vertx-sockjs-service-proxy.git</connection>
