@@ -19,7 +19,6 @@ package io.vertx.serviceproxy.testmodel;
 import io.vertx.codegen.annotations.*;
 import io.vertx.core.Future;
 import io.vertx.core.Vertx;
-import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.serviceproxy.testmodel.impl.TestServiceImpl;

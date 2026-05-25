@@ -19,9 +19,7 @@ package io.vertx.serviceproxy.testmodel;
 import io.vertx.codegen.annotations.ProxyClose;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
-import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
-import io.vertx.core.Handler;
 
 /**
  * @author <a href="http://tfox.org">Tim Fox</a>
