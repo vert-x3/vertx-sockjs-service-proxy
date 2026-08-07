@@ -8,7 +8,7 @@
     <version>43</version>
   </parent>
 
-  <version>4.5.32</version>
+  <version>4.5.33-SNAPSHOT</version>
   <artifactId>vertx-sockjs-service-proxy</artifactId>
   <name>Vert.x SockJS Service Proxy</name>
 
